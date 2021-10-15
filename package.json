@@ -1,19 +1,19 @@
 {
-  "name": "jbrowse-plugin-ucsc",
+  "name": "jbrowse-plugin-bdgp",
   "version": "1.0.3",
-  "description": "JBrowse 2 UCSC API plugin",
-  "repository": "github:cmdcolin/jbrowse-plugin-ucsc-api",
+  "description": "JBrowse 2 BDGP API plugin",
+  "repository": "github:bdgp/jbrowse-plugin-bdgp-rest-api",
   "jbrowse-plugin": {
-    "name": "UCSC"
+    "name": "BDGP"
   },
   "main": "dist/index.js",
-  "module": "dist/jbrowse-plugin-ucsc.esm.js",
+  "module": "dist/jbrowse-plugin-bdgp.esm.js",
   "typings": "dist/index.d.ts",
   "scripts": {
     "clean": "rimraf dist",
-    "start": "tsdx watch --verbose --noClean --format umd --name JBrowsePluginUCSC --onFirstSuccess \"yarn serve --cors --listen 9000 .\"",
+    "start": "tsdx watch --verbose --noClean --format umd --name JBrowsePluginBDGP --onFirstSuccess \"yarn serve --cors --listen 9000 .\"",
     "prebuild": "npm run clean",
-    "build": "tsdx build --format cjs,esm,umd --name JBrowsePluginUCSC && cp distconfig.json dist/config.json",
+    "build": "tsdx build --format cjs,esm,umd --name JBrowsePluginBDGP && cp distconfig.json dist/config.json",
     "test": "tsdx test",
     "lint": "tsdx lint",
     "prepare": "npm run build",
@@ -25,7 +25,7 @@
     "dist",
     "src"
   ],
-  "author": "Colin Diesh",
+  "author": "Ben Booth",
   "license": "MIT",
   "keywords": [
     "jbrowse",
