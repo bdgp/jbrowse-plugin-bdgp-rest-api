@@ -4,16 +4,16 @@
   "description": "JBrowse 2 BDGP API plugin",
   "repository": "github:bdgp/jbrowse-plugin-bdgp-rest-api",
   "jbrowse-plugin": {
-    "name": "BDGP"
+    "name": "BDGPAdapter"
   },
   "main": "dist/index.js",
   "module": "dist/jbrowse-plugin-bdgp.esm.js",
   "typings": "dist/index.d.ts",
   "scripts": {
     "clean": "rimraf dist",
-    "start": "tsdx watch --verbose --noClean --format umd --name JBrowsePluginBDGP --onFirstSuccess \"yarn serve --cors --listen 9000 .\"",
+    "start": "tsdx watch --verbose --noClean --format umd --name JBrowsePluginBDGPAdapter --onFirstSuccess \"yarn serve --cors --listen 9000 .\"",
     "prebuild": "npm run clean",
-    "build": "tsdx build --format cjs,esm,umd --name JBrowsePluginBDGP && cp distconfig.json dist/config.json",
+    "build": "tsdx build --format cjs,esm,umd --name JBrowsePluginBDGPAdapter && cp distconfig.json dist/config.json",
     "test": "tsdx test",
     "lint": "tsdx lint",
     "prepare": "npm run build",

@@ -15,9 +15,12 @@
           src = ./.;
           pname = "jbrowse2-plugin-bdgp-rest-api";
           version = "1.0.1";
-          buildInputs = [ pkgs.nodejs pkgs.yarn pkgs.nodePackages.node-pre-gyp ];
+          buildInputs = [ pkgs.nodejs pkgs.yarn pkgs.nodePackages.node-pre-gyp pkgs.perl ];
           buildPhase = ''
-          PREFIX=$PWD/.yarn HOME=$PWD PATH=$PWD/node_modules/.bin:$PATH yarn
+          set -x
+          PREFIX=$PWD/.yarn HOME=$PWD yarn || true
+          find node_modules/.bin ! -type d |xargs -d \\n -n 1 perl -i -pe 's|^#!/usr/bin/env\s+node\b|#!${pkgs.nodejs}/bin/node| if $.==1'
+          PREFIX=$PWD/.yarn HOME=$PWD yarn
           '';
           installPhase = ''
           mkdir -p "$out"/jbrowse2-plugin-bdgp-rest-api
