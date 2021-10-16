@@ -3,12 +3,12 @@ import {
   readConfObject,
 } from "@jbrowse/core/configuration";
 import { ObservableCreate } from "@jbrowse/core/util/rxjs";
-import { BaseFeatureDataAdapter } from "@jbrowse/core/data_adapters/BaseAdapter";
+import { BaseFeatureDataAdapter, BaseArgs, BaseTextSearchAdapter, SearchScope } from "@jbrowse/core/data_adapters/BaseAdapter";
 import SimpleFeature from "@jbrowse/core/util/simpleFeature";
 import stringify from "json-stable-stringify";
 
 export const configSchema = ConfigurationSchema(
-  http_"BDGPAdapter",
+  "BDGPAdapter",
   {
     source: {
       type: "string",
@@ -29,7 +29,7 @@ export const configSchema = ConfigurationSchema(
   { explicitlyTyped: true },
 );
 
-export class AdapterClass extends BaseFeatureDataAdapter implements BaseTextSearchAdapter {
+export class AdapterClass extends BaseFeatureDataAdapter {
   constructor(config) {
     super(config);
     this.config = config;
@@ -72,7 +72,7 @@ export class AdapterClass extends BaseFeatureDataAdapter implements BaseTextSear
     });
   }
 
-  async searchIndex(args: BaseArgs, searchScope: SearchScope) {
+  async searchIndex(args, searchScope) {
     const prefix = readConfObject(this.config, "prefix");
     const result = await fetch(
             `${prefix}/jbrowse/${encodeURIComponent(searchScope.assemblyName)}/name?${args.searchType==='prefix'?'startswith':'equals'}=${encodeURIComponent(args.queryString)}`
