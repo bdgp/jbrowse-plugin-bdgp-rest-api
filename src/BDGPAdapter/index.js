@@ -72,6 +72,21 @@ export class AdapterClass extends BaseFeatureDataAdapter {
     });
   }
 
+  async getRefNames() {
+    const prefix = readConfObject(this.config, "prefix");
+    const result = await fetch(`${prefix}/jbrowse/${encodeURIComponent(searchScope.assemblyName)}/refSeqs.json`);
+    if (!result.ok) {
+      throw new Error(
+        `Failed to fetch ${result.status} ${result.statusText}`,
+      );
+    }
+    const results = await result.json();
+    const refnames = results.map(entry => {
+      return entry.name;
+    });
+    return refnames;
+  }
+
   async searchIndex(args, searchScope) {
     const prefix = readConfObject(this.config, "prefix");
     const result = await fetch(
