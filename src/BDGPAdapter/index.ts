@@ -6,7 +6,6 @@ import { ObservableCreate } from "@jbrowse/core/util/rxjs";
 import {
   BaseFeatureDataAdapter,
   BaseArgs,
-  BaseAdapter,
   BaseTextSearchAdapter,
 } from "@jbrowse/core/data_adapters/BaseAdapter";
 import SimpleFeature, { Feature } from "@jbrowse/core/util/simpleFeature";
@@ -33,6 +32,11 @@ export const configSchema = ConfigurationSchema(
       description: "url prefix to use for name searches",
       defaultValue: "",
     },
+    assemblyNames: {
+      type: "stringArray",
+      defaultValue: [],
+      description: "List of assemblies covered by text search adapter",
+    },
     assemblyName: {
       type: "string",
       description: "Assembly name to use for getRefNames",
@@ -42,29 +46,8 @@ export const configSchema = ConfigurationSchema(
   { explicitlyTyped: true },
 );
 
-export const searchConfigSchema = ConfigurationSchema(
-  "BDGPTextSearchAdapter",
-  {
-    prefix: {
-      type: "string",
-      description: "url prefix to use for name searches",
-      defaultValue: "",
-    },
-    assemblyNames: {
-      type: "stringArray",
-      defaultValue: [],
-      description: "List of assemblies covered by text search adapter",
-    },
-    assemblyName: {
-      type: "string",
-      defaultValue: "",
-      description: "Assembly covered by text search adapter",
-    },
-  },
-  { explicitlyTyped: true, explicitIdentifier: "textSearchAdapterId" },
-);
-
-export class AdapterClass extends BaseFeatureDataAdapter {
+export class AdapterClass extends BaseFeatureDataAdapter
+  implements BaseTextSearchAdapter {
   config: AnyConfigurationModel;
 
   constructor(config: AnyConfigurationModel) {
@@ -143,17 +126,6 @@ export class AdapterClass extends BaseFeatureDataAdapter {
       return entry.name;
     });
     return refnames;
-  }
-
-  freeResources() {}
-}
-
-export class SearchAdapterClass extends BaseAdapter
-  implements BaseTextSearchAdapter {
-  config: AnyConfigurationModel;
-  constructor(config: AnyConfigurationModel) {
-    super(config);
-    this.config = config;
   }
 
   async searchIndex(args: BaseArgs): Promise<BaseResult[]> {
