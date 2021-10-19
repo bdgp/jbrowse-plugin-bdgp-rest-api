@@ -1,6 +1,11 @@
 import AdapterType from "@jbrowse/core/pluggableElementTypes/AdapterType";
 import Plugin from "@jbrowse/core/Plugin";
-import { AdapterClass, configSchema } from "./BDGPAdapter";
+import {
+  AdapterClass,
+  configSchema,
+  SearchAdapterClass,
+  searchConfigSchema,
+} from "./BDGPAdapter";
 import { version } from "../package.json";
 
 export default class BDGPPlugin extends Plugin {
@@ -13,6 +18,14 @@ export default class BDGPPlugin extends Plugin {
           name: "BDGPAdapter",
           configSchema,
           AdapterClass,
+        }),
+    );
+    pluginManager.addAdapterType(
+      () =>
+        new AdapterType({
+          name: "BDGPTextSearchAdapter",
+          configSchema: searchConfigSchema,
+          AdapterClass: SearchAdapterClass,
         }),
     );
   }
