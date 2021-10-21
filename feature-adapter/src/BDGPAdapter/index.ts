@@ -5,14 +5,11 @@ import {
 import { ObservableCreate } from "@jbrowse/core/util/rxjs";
 import {
   BaseFeatureDataAdapter,
-  BaseArgs,
-  BaseTextSearchAdapter,
 } from "@jbrowse/core/data_adapters/BaseAdapter";
 import SimpleFeature, { Feature } from "@jbrowse/core/util/simpleFeature";
 import { AnyConfigurationModel } from "@jbrowse/core/configuration/configurationSchema";
 import { BaseOptions } from "@jbrowse/core/data_adapters/BaseAdapter";
 import { Region } from "@jbrowse/core/util/types";
-import BaseResult from "@jbrowse/core/TextSearch/BaseResults";
 
 export const configSchema = ConfigurationSchema(
   "BDGPAdapter",
@@ -32,11 +29,6 @@ export const configSchema = ConfigurationSchema(
       description: "url prefix to use for name searches",
       defaultValue: "",
     },
-    assemblyNames: {
-      type: "stringArray",
-      defaultValue: [],
-      description: "List of assemblies covered by text search adapter",
-    },
     assemblyName: {
       type: "string",
       description: "Assembly name to use for getRefNames",
@@ -46,8 +38,7 @@ export const configSchema = ConfigurationSchema(
   { explicitlyTyped: true },
 );
 
-export class AdapterClass extends BaseFeatureDataAdapter
-  implements BaseTextSearchAdapter {
+export class AdapterClass extends BaseFeatureDataAdapter {
   config: AnyConfigurationModel;
 
   constructor(config: AnyConfigurationModel) {
@@ -96,8 +87,8 @@ export class AdapterClass extends BaseFeatureDataAdapter
               strand: feature.strand,
               subfeatures: feature.subfeatures || [],
               color: feature.color,
-              url: feature.url,
-              "Labtrack Link": div.innerHTML,
+              feature_color: feature.color,
+              labtrack: div.innerHTML,
             };
             const sf: Feature = new SimpleFeature(attrs);
             observer.next(sf);
@@ -128,32 +119,5 @@ export class AdapterClass extends BaseFeatureDataAdapter
     return refnames;
   }
 
-  async searchIndex(args: BaseArgs): Promise<BaseResult[]> {
-    const prefix = readConfObject(this.config, "prefix");
-    const assemblyName = readConfObject(this.config, "assemblyName");
-    const result = await fetch(
-      `${prefix}/jbrowse/${encodeURIComponent(assemblyName)}/name?${
-        args.searchType === "prefix" ? "startswith" : "equals"
-      }=${encodeURIComponent(args.queryString)}`,
-    );
-    if (!result.ok) {
-      throw new Error(`Failed to fetch ${result.status} ${result.statusText}`);
-    }
-    const results = await result.json();
-    const locstrings = results
-      .map(
-        (entry: {
-          location: { ref: any; start: any; end: any };
-          name: any;
-        }) => {
-          return new BaseResult({
-            locString: `${entry.location.ref}:${entry.location.start}-${entry.location.end}`,
-            label: entry.name,
-          });
-        },
-      )
-      .slice(0, args.limit ? args.limit : undefined);
-    return locstrings;
-  }
   freeResources() {}
 }
