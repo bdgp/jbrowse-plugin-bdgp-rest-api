@@ -10,6 +10,8 @@ import SimpleFeature, { Feature } from "@jbrowse/core/util/simpleFeature";
 import { AnyConfigurationModel } from "@jbrowse/core/configuration/configurationSchema";
 import { BaseOptions } from "@jbrowse/core/data_adapters/BaseAdapter";
 import { Region } from "@jbrowse/core/util/types";
+import React from 'react';
+import ReactDOMServer from 'react-dom/server';
 
 export const configSchema = ConfigurationSchema(
   "BDGPAdapter",
@@ -71,12 +73,7 @@ export class AdapterClass extends BaseFeatureDataAdapter {
           }
           const data = await result.json();
           for (const feature of data.features) {
-            const div = document.createElement("div");
-            const a = document.createElement("a");
-            a.setAttribute("href", feature.url);
-            const text = document.createTextNode(feature.name);
-            a.appendChild(text);
-            div.appendChild(a);
+            const a = <a target="_blank" href={feature.url}>{feature.name}</a>;
             const attrs = {
               uniqueId: feature.uniqueID,
               name: feature.name,
@@ -86,9 +83,8 @@ export class AdapterClass extends BaseFeatureDataAdapter {
               end: feature.end,
               strand: feature.strand,
               subfeatures: feature.subfeatures || [],
+	      labtrack: ReactDOMServer.renderToString(a),
               color: feature.color,
-              feature_color: feature.color,
-              labtrack: div.innerHTML,
             };
             const sf: Feature = new SimpleFeature(attrs);
             observer.next(sf);
