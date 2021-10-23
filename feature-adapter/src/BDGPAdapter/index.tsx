@@ -74,6 +74,12 @@ export class AdapterClass extends BaseFeatureDataAdapter {
           const data = await result.json();
           for (const feature of data.features) {
             const a = <a target="_blank" href={feature.url}>{feature.name}</a>;
+            let labtrack = "";
+            try {
+              labtrack = ReactDOMServer.renderToString(a);
+            } catch (e) {
+              console.log(e);
+            }
             const attrs = {
               uniqueId: feature.uniqueID,
               name: feature.name,
@@ -83,7 +89,7 @@ export class AdapterClass extends BaseFeatureDataAdapter {
               end: feature.end,
               strand: feature.strand,
               subfeatures: feature.subfeatures || [],
-      	      labtrack: ReactDOMServer && a? ReactDOMServer.renderToString(a) : "",
+      	      labtrack,
               color: feature.color,
             };
             const sf: Feature = new SimpleFeature(attrs);
