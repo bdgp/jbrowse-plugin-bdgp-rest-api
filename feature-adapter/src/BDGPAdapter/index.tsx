@@ -83,7 +83,7 @@ export class AdapterClass extends BaseFeatureDataAdapter {
               end: feature.end,
               strand: feature.strand,
               subfeatures: feature.subfeatures || [],
-	      labtrack: ReactDOMServer.renderToString(a),
+      	      labtrack: ReactDOMServer && a? ReactDOMServer.renderToString(a) : "",
               color: feature.color,
             };
             const sf: Feature = new SimpleFeature(attrs);
