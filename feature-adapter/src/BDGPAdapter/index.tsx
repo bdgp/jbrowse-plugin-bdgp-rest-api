@@ -71,7 +71,12 @@ export class AdapterClass extends BaseFeatureDataAdapter {
               `Failed to fetch ${result.status} ${result.statusText}`,
             );
           }
-          const data = await result.json();
+          let data = [];
+          try {
+            data = await result.json();
+          } catch(e) {
+            console.log(e);
+          }
           for (const feature of data.features) {
             const a = <a target="_blank" href={feature.url}>{feature.name}</a>;
             let labtrack = "";
