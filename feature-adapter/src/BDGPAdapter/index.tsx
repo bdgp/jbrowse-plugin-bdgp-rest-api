@@ -71,34 +71,36 @@ export class AdapterClass extends BaseFeatureDataAdapter {
               `Failed to fetch ${result.status} ${result.statusText}`,
             );
           }
-          let data = [];
+          let data = undefined;
           try {
             data = await result.json();
           } catch(e) {
             console.log(e);
           }
-          for (const feature of data.features) {
-            const a = <a target="_blank" href={feature.url}>{feature.name}</a>;
-            let labtrack = "";
-            try {
-              labtrack = ReactDOMServer.renderToString(a);
-            } catch (e) {
-              console.log(e);
+          if (data) {
+            for (const feature of data.features) {
+              const a = <a target="_blank" href={feature.url}>{feature.name}</a>;
+              let labtrack = "";
+              try {
+                labtrack = ReactDOMServer.renderToString(a);
+              } catch (e) {
+                console.log(e);
+              }
+              const attrs = {
+                uniqueId: feature.uniqueID,
+                name: feature.name,
+                type: feature.type,
+                refName: refName,
+                start: feature.start,
+                end: feature.end,
+                strand: feature.strand,
+                subfeatures: feature.subfeatures || [],
+      	        labtrack,
+                color: feature.color,
+              };
+              const sf: Feature = new SimpleFeature(attrs);
+              observer.next(sf);
             }
-            const attrs = {
-              uniqueId: feature.uniqueID,
-              name: feature.name,
-              type: feature.type,
-              refName: refName,
-              start: feature.start,
-              end: feature.end,
-              strand: feature.strand,
-              subfeatures: feature.subfeatures || [],
-      	      labtrack,
-              color: feature.color,
-            };
-            const sf: Feature = new SimpleFeature(attrs);
-            observer.next(sf);
           }
           observer.complete();
         } else {
