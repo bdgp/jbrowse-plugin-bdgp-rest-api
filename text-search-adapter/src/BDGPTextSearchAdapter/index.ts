@@ -56,7 +56,7 @@ export class AdapterClass extends BaseAdapter implements BaseTextSearchAdapter {
     const assemblyName = readConfObject(this.config, "assemblyName");
     const tracks = readConfObject(this.config, "tracks");
     const result = await fetch(
-      `${prefix}/jbrowse/${encodeURIComponent(assemblyName)}/name?${
+      `${prefix}/jbrowse/${encodeURIComponent(assemblyName)}/name?skip_sqlite=1&${
         args.searchType === "prefix" ? "startswith" : "equals"
       }=${encodeURIComponent(args.queryString)}${
         tracks
